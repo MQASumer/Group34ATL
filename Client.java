@@ -46,15 +46,28 @@ public class Client {
 		String[] splitData = data.split(delims);
 		return splitData;
 	}
+	
+	public static void sendMSG(String msg, DataOutputStream out) {
+		try {
+			out.write(msg.getBytes());
+			out.flush();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+	}
+
+	public static String readMSG(BufferedReader in) throws IOException {
+		String message = in.readLine();
+		System.out.println("server says: " + message);
+		return message;
+	}
 
 	public static void main(String[] args) {
 
 		// TODO
 		/*
-		 * - handshake 
-		 * - read/write functions
-		 * 
-		 * 
+		 * - handshake
 		 */
 
 		try {
