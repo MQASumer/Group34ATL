@@ -3,8 +3,8 @@ import java.io.*;
 import java.net.*;
 
 public class Client {
-	
-	public static class Server implements Comparable<Server> { // Server class to 
+
+	public static class Server implements Comparable<Server> { // Server class to
 		String Type = "";
 		int ID;
 		int core;
@@ -40,7 +40,7 @@ public class Client {
 		}
 
 	}
-	
+
 	public static String[] parsing(String data) {
 		String delims = "[ ]+"; // set the space as the splitting element for parsing messages.
 		String[] splitData = data.split(delims);
@@ -51,11 +51,9 @@ public class Client {
 
 		// TODO
 		/*
-		- handshake
-		- read/write functions
-		-scheduling
-		
-		*/
+		 * - handshake - read/write functions -scheduling
+		 * 
+		 */
 
 		try {
 
@@ -64,12 +62,10 @@ public class Client {
 			BufferedReader din = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 
-			//Handshake with server
-			
-			
-			
-			//Gets command to find the largest server
-			
+			// Handshake with server
+
+			// Gets command to find the largest server
+
 			sendMSG("GETS All\n", dout); // get server DATA
 			rcvd = readMSG(din);
 			String[] Data = parsing(rcvd); // parse DATA to find the amount of servers
@@ -77,7 +73,7 @@ public class Client {
 			// Initialise variable for server DATA
 			int numServer = Integer.parseInt(Data[1]); // Number of servers on system.
 			Server[] serverList = new Server[numServer]; // Create server array.
-			
+
 			// Loop through all servers to create server list
 			for (int i = 0; i < numServer; i++) {
 				rcvd = readMSG(din);
@@ -99,17 +95,36 @@ public class Client {
 					break;
 				}
 			}
-			System.out.println("Largest in list is " + serverList[highestCoreIndex].getType() + " with " + serverList[highestCoreIndex].getCore() + " cores.");
+			System.out.println("Largest in list is " + serverList[highestCoreIndex].getType() + " with "
+					+ serverList[highestCoreIndex].getCore() + " cores.");
 
-			
 			sendMSG("OK\n", dout); // catch the "." at end of data stream.
 			rcvd = readMSG(din);
-			
-			
-			//Scheduale jobs to server
 
+			// Scheduale jobs to server
+			int i = 0;// Used to track number of jobs
+			sendMSG("REDY\n", dout);// Inital REDY to get job from server
 
+			while (!rcvd.equals("NONE")) {
+				while (!rcvd.equals("OK")) {
+					if (rcvd.contains("JCPL")) { // Breaks loop if no more jobs to schedule and if jobs are waiting to
+													// finish
+						break;
+					}
+					sendMSG("SCHD " + i + " " + serverList[2].Type + " " + serverList[2].ID + "\n", dout); // Schedules
+																											// Job
+																											// number,
+																											// Server
+																											// Type,
+																											// Server ID
+					rcvd = readMSG(din);
+					i++;
+				}
+				sendMSG("REDY\n", dout);
+				rcvd = readMSG(din);
+			}
 
+			sendMSG("QUIT\n", dout);
 
 			dout.close();
 			s.close();
