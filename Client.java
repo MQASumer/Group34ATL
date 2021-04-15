@@ -4,7 +4,7 @@ import java.net.*;
 
 public class Client {
 
-	public static class Server implements Comparable<Server> { // Server class to
+	public static class Server implements Comparable<Server> { // Server class to hold server info
 		String Type = "";
 		int ID;
 		int core;
@@ -32,7 +32,7 @@ public class Client {
 
 		@Override
 		public int compareTo(Client.Server o) {
-			// TODO Auto-generated method stub
+			// sort by core then type acending order.
 			if (this.core - o.core == 0) {
 				return o.Type.compareTo(this.Type);
 			}
@@ -51,7 +51,9 @@ public class Client {
 
 		// TODO
 		/*
-		 * - handshake - read/write functions -scheduling
+		 * - handshake 
+		 * - read/write functions
+		 * 
 		 * 
 		 */
 
@@ -64,6 +66,11 @@ public class Client {
 
 			// Handshake with server
 
+			
+			//hold first job for later
+			rcvd = readMSG(din);
+			String firstjob = rcvd;
+			
 			// Gets command to find the largest server
 
 			sendMSG("GETS All\n", dout); // get server DATA
@@ -102,21 +109,23 @@ public class Client {
 			rcvd = readMSG(din);
 
 			// Scheduale jobs to server
+			rcvd = firstjob; // start with first job recived.
+			/*
 			int i = 0;// Used to track number of jobs
 			sendMSG("REDY\n", dout);// Inital REDY to get job from server
-
+			*/
+			
 			while (!rcvd.equals("NONE")) {
+				// String[] job = parsing(rcvd);  job[2] is job id
 				while (!rcvd.equals("OK")) {
 					if (rcvd.contains("JCPL")) { // Breaks loop if no more jobs to schedule and if jobs are waiting to
 													// finish
 						break;
 					}
-					sendMSG("SCHD " + i + " " + serverList[2].Type + " " + serverList[2].ID + "\n", dout); // Schedules
+					sendMSG("SCHD " + i + " " + serverList[highestCoreIndex].Type + " " + serverList[highestCoreIndex].ID + "\n", dout); // Schedules
+					// serverList[highestCoreIndex].ID may need to hardcoded to 0. needs testing.
 																											// Job
-																											// number,
-																											// Server
-																											// Type,
-																											// Server ID
+																				// Server ID
 					rcvd = readMSG(din);
 					i++;
 				}
