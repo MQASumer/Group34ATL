@@ -46,7 +46,7 @@ public class Client {
 		String[] splitData = data.split(delims);
 		return splitData;
 	}
-	
+
 	public static void sendMSG(String msg, DataOutputStream out) {
 		try {
 			out.write(msg.getBytes());
@@ -79,11 +79,10 @@ public class Client {
 
 			// Handshake with server
 
-			
-			//hold first job for later
+			// hold first job for later
 			rcvd = readMSG(din);
 			String firstjob = rcvd;
-			
+
 			// Gets command to find the largest server
 
 			sendMSG("GETS All\n", dout); // get server DATA
@@ -123,26 +122,24 @@ public class Client {
 
 			// Scheduale jobs to server
 			rcvd = firstjob; // start with first job recived.
-			/*
-			int i = 0;// Used to track number of jobs
-			sendMSG("REDY\n", dout);// Inital REDY to get job from server
-			*/
-			
+
 			while (!rcvd.equals("NONE")) {
-				// String[] job = parsing(rcvd);  job[2] is job id
-				while (!rcvd.equals("OK")) {
-					if (rcvd.contains("JCPL")) { // Breaks loop if no more jobs to schedule and if jobs are waiting to
-													// finish
-						break;
-					}
-					sendMSG("SCHD " + i + " " + serverList[highestCoreIndex].Type + " " + serverList[highestCoreIndex].ID + "\n", dout); // Schedules
+				String job = parsing(rcvd); // Get job id and job type for switch statement
+
+				switch (job[0]) {
+				case "JOBN": // Schedule job
+					sendMSG("SCHD " + job[2] + " " + serverList[highestCoreIndex].getType() + " " + serverList[2].ID
+							+ "\n", dout);
 					// serverList[highestCoreIndex].ID may need to hardcoded to 0. needs testing.
-																											// Job
-																				// Server ID
-					rcvd = readMSG(din);
-					i++;
+
+					break;
+				case "JCPL": // If job is being completed send REDY
+					sendMSG("REDY", dout);
+					break;
+				case "OK": // Ask for next job
+					sendMSG("REDY", dout);
+					break;
 				}
-				sendMSG("REDY\n", dout);
 				rcvd = readMSG(din);
 			}
 
