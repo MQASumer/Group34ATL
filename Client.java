@@ -128,8 +128,7 @@ public class Client {
 
 				switch (job[0]) {
 				case "JOBN": // Schedule job
-					sendMSG("SCHD " + job[2] + " " + serverList[highestCoreIndex].getType() + " " + serverList[2].ID
-							+ "\n", dout);
+					sendMSG("SCHD " + job[2] + " " + serverList[highestCoreIndex].getType() + " 0" + "\n", dout);
 					// serverList[highestCoreIndex].ID may need to hardcoded to 0. needs testing.
 
 					break;
