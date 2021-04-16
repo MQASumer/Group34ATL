@@ -1,6 +1,6 @@
 import java.io.*;
-
 import java.net.*;
+import java.util.*;
 
 public class Client {
 
@@ -32,7 +32,7 @@ public class Client {
 
 		@Override
 		public int compareTo(Client.Server o) {
-			// sort by core then type acending order.
+			// sort by core then type ascending order.
 			if (this.core - o.core == 0) {
 				return o.Type.compareTo(this.Type);
 			}
@@ -63,7 +63,7 @@ public class Client {
 		return message;
 	}
 
-	public static void doHandShake(BufferedReader in, DataOutpuStream out) {
+	public static void doHandShake(BufferedReader in, DataOutputStream out) {
 		try {
 			String received = ""; // holds received message from server
 
@@ -143,16 +143,15 @@ public class Client {
 			sendMSG("OK\n", dout); // catch the "." at end of data stream.
 			rcvd = readMSG(din);
 
-			// Scheduale jobs to server
-			rcvd = firstjob; // start with first job recived.
+			// Schedule jobs to server
+			rcvd = firstjob; // start with first job received.
 
 			while (!rcvd.equals("NONE")) {
-				String job[] = parsing(rcvd); // Get job id and job type for switch statement
+				String[] job = parsing(rcvd); // Get job id and job type for switch statement
 
 				switch (job[0]) {
 				case "JOBN": // Schedule job
 					sendMSG("SCHD " + job[2] + " " + serverList[highestCoreIndex].getType() + " 0" + "\n", dout);
-					// serverList[highestCoreIndex].ID may need to hardcoded to 0. needs testing.
 
 					break;
 				case "JCPL": // If job is being completed send REDY
