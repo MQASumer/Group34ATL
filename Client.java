@@ -133,10 +133,10 @@ public class Client {
 
 					break;
 				case "JCPL": // If job is being completed send REDY
-					sendMSG("REDY", dout);
+					sendMSG("REDY\n", dout);
 					break;
 				case "OK": // Ask for next job
-					sendMSG("REDY", dout);
+					sendMSG("REDY\n", dout);
 					break;
 				}
 				rcvd = readMSG(din);
