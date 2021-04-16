@@ -97,7 +97,7 @@ public class Client {
 			BufferedReader din = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 			
-			Strinf rcvd = "";
+			String rcvd = "";
 
 			// Handshake with server
 			doHandShake(din, dout);
