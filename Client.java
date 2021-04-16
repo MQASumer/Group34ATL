@@ -62,13 +62,33 @@ public class Client {
 		System.out.println("server says: " + message);
 		return message;
 	}
+	
+	public static void doHandShake(BufferedReader in, DataOutpuStream out){
+		try{
+			String received = ""; //holds received message from server
+			
+			sendMSG("HELO\n", out); //initiate handshake by sending HELO
+			
+			received = readMSG(in);
+			if(received.equals("ok"));{
+				sendMSG("AUTH Group34\n", out);
+			} else{
+				System.out.println("ERROR: OK was not received");
+			}
+			
+			received = readMSG(in);
+			if(received.equals("OK")){
+				sendMSG("REDY\n", out);
+			} else{
+				System.out.println("ERROR: OK was not received");
+			}
+			
+		} catch(Exception e){
+			System.out.println(e);
+		}
+	}
 
 	public static void main(String[] args) {
-
-		// TODO
-		/*
-		 * - handshake
-		 */
 
 		try {
 
@@ -76,8 +96,11 @@ public class Client {
 
 			BufferedReader din = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+			
+			Strinf rcvd = "";
 
 			// Handshake with server
+			doHandShake(din, dout);
 
 			// hold first job for later
 			rcvd = readMSG(din);
