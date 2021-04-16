@@ -62,28 +62,28 @@ public class Client {
 		System.out.println("server says: " + message);
 		return message;
 	}
-	
-	public static void doHandShake(BufferedReader in, DataOutpuStream out){
-		try{
-			String received = ""; //holds received message from server
-			
-			sendMSG("HELO\n", out); //initiate handshake by sending HELO
-			
+
+	public static void doHandShake(BufferedReader in, DataOutpuStream out) {
+		try {
+			String received = ""; // holds received message from server
+
+			sendMSG("HELO\n", out); // initiate handshake by sending HELO
+
 			received = readMSG(in);
-			if(received.equals("ok"));{
+			if (received.equals("OK")) {
 				sendMSG("AUTH Group34\n", out);
-			} else{
+			} else {
 				System.out.println("ERROR: OK was not received");
 			}
-			
+
 			received = readMSG(in);
-			if(received.equals("OK")){
+			if (received.equals("OK")) {
 				sendMSG("REDY\n", out);
-			} else{
+			} else {
 				System.out.println("ERROR: OK was not received");
 			}
-			
-		} catch(Exception e){
+
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
@@ -96,7 +96,7 @@ public class Client {
 
 			BufferedReader din = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-			
+
 			String rcvd = "";
 
 			// Handshake with server
@@ -147,7 +147,7 @@ public class Client {
 			rcvd = firstjob; // start with first job recived.
 
 			while (!rcvd.equals("NONE")) {
-				String job = parsing(rcvd); // Get job id and job type for switch statement
+				String job[] = parsing(rcvd); // Get job id and job type for switch statement
 
 				switch (job[0]) {
 				case "JOBN": // Schedule job
